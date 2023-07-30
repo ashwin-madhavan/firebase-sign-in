@@ -1,5 +1,6 @@
 package com.example.firebaseauthyt.presentation.login_screen
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -70,7 +71,9 @@ class SignInViewModel @Inject constructor(
 
                     // Get the currently signed-in user
                     val currentUser = firebaseAuth.currentUser
-
+                    if (currentUser != null) {
+                        Log.d("SignIn-View-Model", currentUser.uid.toString())
+                    }
                     // Check if the user is not null before accessing the UID
                     if (currentUser != null) {
                         _uidState.value = currentUser.uid

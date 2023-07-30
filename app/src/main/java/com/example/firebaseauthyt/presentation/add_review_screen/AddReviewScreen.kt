@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -43,10 +44,11 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.firebaseauthyt.model.Movie
+import com.example.firebaseauthyt.presentation.home_screen.HomeViewModel
 
 
 @Composable
-fun AddReviewScreen() {
+fun AddReviewScreen(userID: String?, homeViewModel: HomeViewModel) {
     val viewModel : SearchMovieViewModel  = viewModel()
 
     var moviesList by remember { mutableStateOf(viewModel.state.value) }
@@ -59,11 +61,9 @@ fun AddReviewScreen() {
     val heightTextFields by remember {
         mutableStateOf(55.dp)
     }
-
     var textFieldSize by remember {
         mutableStateOf(Size.Zero)
     }
-
     var expanded by remember {
         mutableStateOf(false)
     }
@@ -188,6 +188,20 @@ fun AddReviewScreen() {
                 }
             }
 
+            Button(onClick = {
+                if (userID != null) {
+                    homeViewModel.addMovieReview(
+                        userID,
+                        "test-title",
+                        "test-review",
+                        5
+                    )
+                } else {
+                    /*TODO*/
+                }
+            }) {
+                Text(text = "Add Review")
+            }
         }
 
         selectedMovie?.let { displayMovieInfo(movie = selectedMovie!!) }

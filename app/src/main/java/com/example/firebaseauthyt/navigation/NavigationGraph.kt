@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.firebaseauthyt.presentation.add_review_screen.AddReviewScreen
 import com.example.firebaseauthyt.presentation.home_screen.HomeScreen
+import com.example.firebaseauthyt.presentation.home_screen.HomeViewModel
 import com.example.firebaseauthyt.presentation.login_screen.SignInScreen
 import com.example.firebaseauthyt.presentation.signup_screen.SignUpScreen
 
@@ -14,6 +15,8 @@ import com.example.firebaseauthyt.presentation.signup_screen.SignUpScreen
 fun NavigationGraph(
     navController: NavHostController = rememberNavController(),
 ) {
+    val homeViewModel: HomeViewModel = HomeViewModel()
+
     NavHost(
         navController = navController,
         startDestination = Screens.SignInScreen.route
@@ -35,12 +38,13 @@ fun NavigationGraph(
         composable(route = Screens.SignUpScreen.route) {
             SignUpScreen()
         }
+        var userID: String? = null
         composable(route = Screens.HomeScreenWithArgument.route) { backStackEntry ->
-            val argument = backStackEntry.arguments?.getString("argument_key")
-            HomeScreen(argument) { navController.navigate(Screens.TestScreen.route) }
+            userID = backStackEntry.arguments?.getString("argument_key")
+            HomeScreen(userID, homeViewModel) { navController.navigate(Screens.TestScreen.route) }
         }
         composable(route = Screens.TestScreen.route) {
-            AddReviewScreen()
+            AddReviewScreen(userID, homeViewModel)
         }
     }
 

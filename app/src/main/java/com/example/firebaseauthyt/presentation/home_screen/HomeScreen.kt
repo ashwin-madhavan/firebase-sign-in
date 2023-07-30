@@ -1,5 +1,7 @@
 package com.example.firebaseauthyt.presentation.home_screen
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,13 +28,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.firebaseauthyt.model.MovieReview
 
 
 @Composable
-fun HomeScreen(userID: String?, onAddReviewClicked: () -> Unit) {
-    val viewModel: HomeViewModel = HomeViewModel()
+fun HomeScreen(userID: String?,viewModel: HomeViewModel,  onAddReviewClicked: () -> Unit) {
 
     Scaffold(
         floatingActionButton = {
@@ -54,12 +56,16 @@ fun HomeScreen(userID: String?, onAddReviewClicked: () -> Unit) {
 
 
                     Button(onClick = {
-                        viewModel.addMovieReview(
-                            "test",
-                            "test-title",
-                            "test-review",
-                            5
-                        )
+                        if (userID != null) {
+                            viewModel.addMovieReview(
+                                userID,
+                                "test-title",
+                                "test-review",
+                                5
+                            )
+                        } else {
+                            Log.d("HOME-SCREEN", "No userID found!")
+                        }
                     }) {
                         Text(text = "Test Button")
                     }
