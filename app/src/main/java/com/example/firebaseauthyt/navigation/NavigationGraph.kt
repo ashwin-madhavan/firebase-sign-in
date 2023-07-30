@@ -5,7 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.firebaseauthyt.presentation.TestScreen
+import com.example.firebaseauthyt.presentation.add_review_screen.AddReviewScreen
 import com.example.firebaseauthyt.presentation.home_screen.HomeScreen
 import com.example.firebaseauthyt.presentation.login_screen.SignInScreen
 import com.example.firebaseauthyt.presentation.signup_screen.SignUpScreen
@@ -40,7 +40,7 @@ fun NavigationGraph(
             HomeScreen(argument) { navController.navigate(Screens.TestScreen.route) }
         }
         composable(route = Screens.TestScreen.route) {
-            TestScreen()
+            AddReviewScreen()
         }
     }
 
