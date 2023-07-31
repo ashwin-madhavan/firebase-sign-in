@@ -40,9 +40,9 @@ class HomeViewModel() : ViewModel() {
         _uiState.value = userID?.let { HomeState(userID = it) }
     }
 
-    fun getMovieReviews() {
+    fun getMovieReviews(userID: String) {
         viewModelScope.launch() {
-            val movieReviews = getRemoteMovieReviews("testUserID")
+            val movieReviews = getRemoteMovieReviews(userID)
             movieReviewListState.value = movieReviews.values.toList()
         }
     }
@@ -62,23 +62,15 @@ class HomeViewModel() : ViewModel() {
         }
 
         viewModelScope.launch() {
-            withContext(Dispatchers.Default) { getMovieReviews() }
+            withContext(Dispatchers.Default) { getMovieReviews(userID) }
         }
-        Log.d("ADD REVIEW", "check2");
 
         val movieReviewList = movieReviewListState.value.toList()
-        /**
-        val containsDuplicate = movieReviewList.none { it.title == title }
-        Log.d("TAG", movieReviewList.toString())
-        Log.d("TAG", containsDuplicate.toString())
-        if (!containsDuplicate) {
-        throw IllegalArgumentException("The title '$title' already exists.")
-        }
-         **/
+
 
         viewModelScope.launch() {
             addRemoteMovieReview(userID, title, review, rating)
-            getMovieReviews()
+            getMovieReviews(userID)
         }
     }
 

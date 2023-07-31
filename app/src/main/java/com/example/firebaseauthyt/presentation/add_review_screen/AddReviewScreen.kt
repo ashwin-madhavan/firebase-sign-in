@@ -1,5 +1,6 @@
 package com.example.firebaseauthyt.presentation.add_review_screen
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.border
@@ -21,6 +22,9 @@ import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.RadioButton
+import androidx.compose.material.RadioButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -47,9 +51,10 @@ import com.example.firebaseauthyt.model.Movie
 import com.example.firebaseauthyt.presentation.home_screen.HomeViewModel
 
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun AddReviewScreen(userID: String?, homeViewModel: HomeViewModel) {
-    val viewModel : SearchMovieViewModel  = viewModel()
+    val viewModel: SearchMovieViewModel = viewModel()
 
     var moviesList by remember { mutableStateOf(viewModel.state.value) }
     var selectedMovie by remember { mutableStateOf<Movie?>(null) }
@@ -188,14 +193,23 @@ fun AddReviewScreen(userID: String?, homeViewModel: HomeViewModel) {
                 }
             }
 
+            selectedMovie?.let { displayMovieInfo(movie = selectedMovie!!) }
+
+            var review by remember {
+                mutableStateOf("")
+            }
+            TextField(value = review, onValueChange = { review = it })
+
             Button(onClick = {
                 if (userID != null) {
-                    homeViewModel.addMovieReview(
-                        userID,
-                        "test-title",
-                        "test-review",
-                        5
-                    )
+                    selectedMovie?.let {
+                        homeViewModel.addMovieReview(
+                            userID,
+                            it.title,
+                            review,
+                            5
+                        )
+                    }
                 } else {
                     /*TODO*/
                 }
@@ -204,7 +218,6 @@ fun AddReviewScreen(userID: String?, homeViewModel: HomeViewModel) {
             }
         }
 
-        selectedMovie?.let { displayMovieInfo(movie = selectedMovie!!) }
 
     }
 }
@@ -235,6 +248,29 @@ fun CategoryItems(
         Text(text = movie.title + " (" + releaseYear + ")", fontSize = 16.sp)
     }
 
+}
+
+@Composable
+fun RatingInput(onRatingSelected: (Int) -> Unit) {
+    // Create a state to hold the selected rating
+    val (selectedRating, setSelectedRating) = remember { mutableStateOf(1) }
+
+    Column {
+        // Create RadioButtons for each rating value from 1 to 5
+        for (rating in 1..5) {
+            RadioButton(
+                selected = selectedRating == rating,
+                onClick = { setSelectedRating(rating) },
+                colors = RadioButtonDefaults.colors(
+                    selectedColor = MaterialTheme.colors.primary
+                )
+            )
+            Text(text = rating.toString(), modifier = Modifier.padding(start = 8.dp))
+        }
+
+        // Pass the selected rating back to the caller
+        onRatingSelected(selectedRating)
+    }
 }
 
 
