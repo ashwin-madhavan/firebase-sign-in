@@ -5,5 +5,5 @@ data class MovieReview(
     val userID : String,
     val title: String,
     val review: String,
-    val rating: Int,
+    val rating: Int
 )

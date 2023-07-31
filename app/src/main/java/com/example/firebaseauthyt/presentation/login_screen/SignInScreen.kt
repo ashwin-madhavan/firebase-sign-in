@@ -74,8 +74,8 @@ fun SignInScreen(
         }
 
 
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("teddy@gmail.com") }
+    var password by rememberSaveable { mutableStateOf("teddy123") }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val state = viewModel.signInState.collectAsState(initial = null)

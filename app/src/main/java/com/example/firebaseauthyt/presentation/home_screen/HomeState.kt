@@ -14,5 +14,5 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class HomeState(
-
+    val userID: String = "test"
 )

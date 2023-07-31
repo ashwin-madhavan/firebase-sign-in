@@ -35,7 +35,7 @@ import com.example.firebaseauthyt.model.MovieReview
 
 @Composable
 fun HomeScreen(userID: String?,viewModel: HomeViewModel,  onAddReviewClicked: () -> Unit) {
-
+    viewModel.getMovieReviews()
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(

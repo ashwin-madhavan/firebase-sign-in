@@ -3,6 +3,8 @@ package com.example.firebaseauthyt.presentation.home_screen
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.firebaseauthyt.model.MovieReview
@@ -13,16 +15,17 @@ import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel() : ViewModel() {
     val movieReviewListState: MutableState<List<MovieReview>> =
         mutableStateOf(emptyList<MovieReview>())
     private var restInterface: MovieReviewApiService
 
+    private val _uiState = MutableLiveData<HomeState>()
+    val uiState: LiveData<HomeState> get() = _uiState
+
     init {
         val retrofit: Retrofit = Retrofit.Builder()
-            .addConverterFactory(
-                GsonConverterFactory.create()
-            )
+            .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(
                 "https://fir-authyt-23f0c-default-rtdb.firebaseio.com/"
             )
@@ -30,20 +33,24 @@ class HomeViewModel : ViewModel() {
         restInterface = retrofit.create(
             MovieReviewApiService::class.java
         )
-
-        getMovieReviews()
+        _uiState.value = HomeState()
     }
 
-    private fun getMovieReviews() {
+    fun updateUserID(userID: String?) {
+        _uiState.value = userID?.let { HomeState(userID = it) }
+    }
+
+    fun getMovieReviews() {
         viewModelScope.launch() {
-            val movieReviews = getRemoteMovieReviews()
+            val movieReviews = getRemoteMovieReviews("testUserID")
             movieReviewListState.value = movieReviews.values.toList()
         }
     }
 
-    private suspend fun getRemoteMovieReviews(): Map<String, MovieReview> {
+    private suspend fun getRemoteMovieReviews(userID: String): Map<String, MovieReview> {
         return withContext(Dispatchers.IO) {
-            restInterface.getMovieReviews()
+            val argument = "\"" + userID + "\""
+            restInterface.getMovieReviewsByUserID(argument)
         }
     }
 
@@ -65,9 +72,9 @@ class HomeViewModel : ViewModel() {
         Log.d("TAG", movieReviewList.toString())
         Log.d("TAG", containsDuplicate.toString())
         if (!containsDuplicate) {
-            throw IllegalArgumentException("The title '$title' already exists.")
+        throw IllegalArgumentException("The title '$title' already exists.")
         }
-        **/
+         **/
 
         viewModelScope.launch() {
             addRemoteMovieReview(userID, title, review, rating)
