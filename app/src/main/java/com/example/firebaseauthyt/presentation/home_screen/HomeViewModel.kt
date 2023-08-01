@@ -9,19 +9,25 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.firebaseauthyt.model.MovieReview
 import com.example.firebaseauthyt.network.MovieReviewApiService
+import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
-class HomeViewModel() : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(private val firebaseAuth: FirebaseAuth) : ViewModel() {
+
     val movieReviewListState: MutableState<List<MovieReview>> =
         mutableStateOf(emptyList<MovieReview>())
     private var restInterface: MovieReviewApiService
 
     private val _uiState = MutableLiveData<HomeState>()
     val uiState: LiveData<HomeState> get() = _uiState
+    val userID = firebaseAuth.uid.toString()
 
     init {
         val retrofit: Retrofit = Retrofit.Builder()

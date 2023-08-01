@@ -27,14 +27,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.unit.dp
 import com.example.firebaseauthyt.model.MovieReview
+import com.example.firebaseauthyt.data.AuthRepository
+import com.example.firebaseauthyt.util.Resource
+import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.FirebaseAuth
 
 
 @Composable
-fun HomeScreen(userID: String?, viewModel: HomeViewModel, onAddReviewClicked: () -> Unit) {
-    if (userID != null) {
-        viewModel.getMovieReviews(userID)
+fun HomeScreen(
+    viewModel: HomeViewModel,
+    onAddReviewClicked: () -> Unit
+) {
+
+    if (viewModel.userID != null) {
+        viewModel.getMovieReviews(viewModel.userID)
     }
     Scaffold(
         floatingActionButton = {
@@ -52,16 +61,18 @@ fun HomeScreen(userID: String?, viewModel: HomeViewModel, onAddReviewClicked: ()
                     .padding(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column() {
-                    LazyColumn(
-                        contentPadding = PaddingValues(
-                            vertical = 8.dp,
-                            horizontal = 8.dp
-                        )
-                    ) {
-                        items(viewModel.movieReviewListState.value) { movieReview ->
-                            MovieReviewItem(movieReview)
-                        }
+
+                Text(text = viewModel.userID)
+
+
+                LazyColumn(
+                    contentPadding = PaddingValues(
+                        vertical = 8.dp,
+                        horizontal = 8.dp
+                    )
+                ) {
+                    items(viewModel.movieReviewListState.value) { movieReview ->
+                        MovieReviewItem(movieReview)
                     }
                 }
             }
@@ -133,7 +144,5 @@ fun RatingIcon(icon: ImageVector, modifier: Modifier) {
     Image(
         imageVector = icon,
         contentDescription = "Rating Icon",
-//        modifier = modifier
-//            .padding(8.dp)
     )
 }

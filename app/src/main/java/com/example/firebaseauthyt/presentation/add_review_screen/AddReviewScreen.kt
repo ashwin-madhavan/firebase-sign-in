@@ -60,7 +60,7 @@ import com.example.firebaseauthyt.presentation.home_screen.HomeViewModel
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun AddReviewScreen(userID: String?, homeViewModel: HomeViewModel) {
+fun AddReviewScreen(homeViewModel: HomeViewModel) {
     val context = LocalContext.current
     val viewModel: SearchMovieViewModel = viewModel()
 
@@ -228,15 +228,12 @@ fun AddReviewScreen(userID: String?, homeViewModel: HomeViewModel) {
                     }
 
                     Button(onClick = {
-                        if (userID != null) {
-                            selectedMovie?.let {
-                                homeViewModel.addMovieReview(
-                                    userID, it.title, review, rating
-                                )
-                            }
-                        } else {
-                            /*TODO*/
+                        selectedMovie?.let {
+                            homeViewModel.addMovieReview(
+                                homeViewModel.userID, it.title, review, rating
+                            )
                         }
+
                         Toast.makeText(context, "Added!", Toast.LENGTH_LONG).show()
                     }) {
                         Text(text = "Add Review")

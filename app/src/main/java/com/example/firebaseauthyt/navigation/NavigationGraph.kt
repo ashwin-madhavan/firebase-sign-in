@@ -2,6 +2,7 @@ package com.example.firebaseauthyt.navigation
 
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,8 +18,8 @@ import com.example.firebaseauthyt.presentation.signup_screen.SignUpScreen
 fun NavigationGraph(
     navController: NavHostController = rememberNavController(),
 ) {
-    val homeViewModel: HomeViewModel = HomeViewModel()
 
+    val homeViewModel: HomeViewModel = viewModel()
     NavHost(
         navController = navController,
         startDestination = Screens.SignInScreen.route
@@ -26,29 +27,19 @@ fun NavigationGraph(
         composable(route = Screens.SignInScreen.route) {
             SignInScreen(
                 onSignUpClick = { navController.navigate(Screens.SignUpScreen.route) },
-                onScreenSignInSuccess = { argumentValue ->
-                    navController.navigate(
-                        "${
-                            Screens.HomeScreenWithArgument.route.replace(
-                                "{argument_key}",
-                                argumentValue
-                            )
-                        }"
-                    )
+                onScreenSignInSuccess = {
+                    navController.navigate(Screens.HomeScreen.route)
                 })
         }
         composable(route = Screens.SignUpScreen.route) {
             SignUpScreen()
         }
         var userID: String? = null
-        composable(route = Screens.HomeScreenWithArgument.route) { backStackEntry ->
-            userID = backStackEntry.arguments?.getString("argument_key")
-            homeViewModel.updateUserID(userID)
-            Log.d("TEST CHECK", homeViewModel.uiState.value?.userID.toString())
-            HomeScreen(userID, homeViewModel) { navController.navigate(Screens.TestScreen.route) }
+        composable(route = Screens.HomeScreen.route) {
+            HomeScreen(homeViewModel) { navController.navigate(Screens.TestScreen.route) }
         }
         composable(route = Screens.TestScreen.route) {
-            AddReviewScreen(userID, homeViewModel)
+            AddReviewScreen(homeViewModel)
         }
     }
 

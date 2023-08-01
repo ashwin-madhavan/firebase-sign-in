@@ -55,7 +55,7 @@ import kotlinx.coroutines.launch
 fun SignInScreen(
     viewModel: SignInViewModel = hiltViewModel(),
     onSignUpClick: () -> Unit,
-    onScreenSignInSuccess: (String) -> Unit
+    onScreenSignInSuccess: () -> Unit
 ) {
 
     val googleSignInState = viewModel.googleState.value
@@ -198,7 +198,7 @@ fun SignInScreen(
                     if (state.value?.isSuccess?.isNotEmpty() == true) {
                         val success = state.value?.isSuccess
                         Toast.makeText(context, "${success}", Toast.LENGTH_LONG).show()
-                        onScreenSignInSuccess.invoke(viewModel.uidState.value)
+                        onScreenSignInSuccess()
                     }
                 }
             }
@@ -216,7 +216,7 @@ fun SignInScreen(
                 scope.launch {
                     if (googleSignInState.success != null) {
                         Toast.makeText(context, "Sign In Success", Toast.LENGTH_LONG).show()
-                        onScreenSignInSuccess.invoke(viewModel.uidState.value)
+                        onScreenSignInSuccess()
                     }
                 }
             }
