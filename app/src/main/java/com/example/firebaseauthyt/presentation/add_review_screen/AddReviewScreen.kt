@@ -2,20 +2,26 @@ package com.example.firebaseauthyt.presentation.add_review_screen
 
 import android.annotation.SuppressLint
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
@@ -24,7 +30,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.RadioButton
-import androidx.compose.material.RadioButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -35,10 +40,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -54,6 +61,7 @@ import com.example.firebaseauthyt.presentation.home_screen.HomeViewModel
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun AddReviewScreen(userID: String?, homeViewModel: HomeViewModel) {
+    val context = LocalContext.current
     val viewModel: SearchMovieViewModel = viewModel()
 
     var moviesList by remember { mutableStateOf(viewModel.state.value) }
@@ -198,27 +206,45 @@ fun AddReviewScreen(userID: String?, homeViewModel: HomeViewModel) {
             var review by remember {
                 mutableStateOf("")
             }
-            TextField(value = review, onValueChange = { review = it })
 
-            Button(onClick = {
-                if (userID != null) {
-                    selectedMovie?.let {
-                        homeViewModel.addMovieReview(
-                            userID,
-                            it.title,
-                            review,
-                            5
-                        )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(
+                        border = BorderStroke(2.dp, Color.Black),
+                        shape = MaterialTheme.shapes.medium
+                    )
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                ) {
+                    TextField(value = review, onValueChange = { review = it })
+
+                    var rating: Int = 1
+                    SimpleRadioButtonComponent { selectedRating ->
+                        rating = selectedRating
                     }
-                } else {
-                    /*TODO*/
+
+                    Button(onClick = {
+                        if (userID != null) {
+                            selectedMovie?.let {
+                                homeViewModel.addMovieReview(
+                                    userID, it.title, review, rating
+                                )
+                            }
+                        } else {
+                            /*TODO*/
+                        }
+                        Toast.makeText(context, "Added!", Toast.LENGTH_LONG).show()
+                    }) {
+                        Text(text = "Add Review")
+                    }
                 }
-            }) {
-                Text(text = "Add Review")
+
             }
         }
-
-
     }
 }
 
@@ -251,27 +277,43 @@ fun CategoryItems(
 }
 
 @Composable
-fun RatingInput(onRatingSelected: (Int) -> Unit) {
-    // Create a state to hold the selected rating
-    val (selectedRating, setSelectedRating) = remember { mutableStateOf(1) }
+fun SimpleRadioButtonComponent(onRatingSelected: (Int) -> Unit) {
+    val radioOptions = listOf(1, 2, 3, 4, 5)
+    val (selectedOption, setSelectedOption) = remember { mutableStateOf(radioOptions[2]) }
 
-    Column {
-        // Create RadioButtons for each rating value from 1 to 5
-        for (rating in 1..5) {
-            RadioButton(
-                selected = selectedRating == rating,
-                onClick = { setSelectedRating(rating) },
-                colors = RadioButtonDefaults.colors(
-                    selectedColor = MaterialTheme.colors.primary
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        radioOptions.forEach { option ->
+            Column(
+                modifier = Modifier
+                    .selectable(
+                        selected = (option == selectedOption),
+                        onClick = { setSelectedOption(option) }
+                    )
+            ) {
+                Text(
+                    text = option.toString(),
+                    modifier = Modifier.padding(start = 16.dp)
                 )
-            )
-            Text(text = rating.toString(), modifier = Modifier.padding(start = 8.dp))
-        }
 
-        // Pass the selected rating back to the caller
-        onRatingSelected(selectedRating)
+                RadioButton(
+                    selected = (option == selectedOption),
+                    onClick = {
+                        setSelectedOption(option)
+
+                        // Call the callback to update the rating variable
+                        onRatingSelected(option)
+                    },
+                )
+            }
+        }
     }
 }
+
+
+
 
 
 
