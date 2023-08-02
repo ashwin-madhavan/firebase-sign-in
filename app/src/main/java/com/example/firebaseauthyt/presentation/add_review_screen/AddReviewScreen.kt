@@ -227,7 +227,7 @@ fun AddReviewScreen(databaseViewModel: DatabaseViewModel, movieAPIViewModel: Mov
 
                     Button(onClick = {
                         selectedMovie?.let {
-                            databaseViewModel.addMovieReview( it.title, review, rating
+                            databaseViewModel.addMovieReview(it.id, it.title, review, rating
                             )
                         }
 

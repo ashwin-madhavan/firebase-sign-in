@@ -58,7 +58,7 @@ class DatabaseViewModel @Inject constructor(private val firebaseAuth: FirebaseAu
         }
     }
 
-    fun addMovieReview(title: String, review: String, rating: Int) {
+    fun addMovieReview(movieID: Long, title: String, review: String, rating: Int) {
         Log.d("ADD REVIEW", "check1");
         if (title.isEmpty() || review.isEmpty()) {
             throw IllegalArgumentException("Title and description cannot be empty")
@@ -72,12 +72,13 @@ class DatabaseViewModel @Inject constructor(private val firebaseAuth: FirebaseAu
 
 
         viewModelScope.launch() {
-            addRemoteMovieReview(title, review, rating)
+            addRemoteMovieReview(movieID, title, review, rating)
             getMovieReviews()
         }
     }
 
     private suspend fun addRemoteMovieReview(
+        movieID: Long,
         title: String,
         review: String,
         rating: Int
@@ -85,6 +86,7 @@ class DatabaseViewModel @Inject constructor(private val firebaseAuth: FirebaseAu
         return withContext(Dispatchers.IO) {
             val movieReview = MovieReview(
                 curUserID,
+                movieID,
                 title,
                 review,
                 rating
