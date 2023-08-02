@@ -8,12 +8,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import androidx.navigation.navDeepLink
 import com.example.firebaseauthyt.presentation.DatabaseViewModel
 import com.example.firebaseauthyt.presentation.add_review_screen.AddReviewScreen
 import com.example.firebaseauthyt.presentation.MovieAPIViewModel
 import com.example.firebaseauthyt.presentation.home_screen.HomeScreen
 import com.example.firebaseauthyt.presentation.login_screen.SignInScreen
+import com.example.firebaseauthyt.presentation.manage_friends_screen.ManageFriendsScreen
 import com.example.firebaseauthyt.presentation.movie_details_screen.MovieDetailsScreen
 import com.example.firebaseauthyt.presentation.signup_screen.SignUpScreen
 
@@ -40,8 +40,12 @@ fun NavigationGraph(
         composable(route = Screens.HomeScreen.route) {
             HomeScreen(
                 databaseViewModel,
+                { navController.navigate(Screens.ManageFriendsScreen.route) },
                 { movieId -> navController.navigate("${Screens.MovieDetailsScreen.route}/$movieId") },
                 { navController.navigate(Screens.AddReviewScreen.route) })
+        }
+        composable(route = Screens.ManageFriendsScreen.route) {
+            ManageFriendsScreen()
         }
         composable(
             route = "${Screens.MovieDetailsScreen.route}/{movieId}",

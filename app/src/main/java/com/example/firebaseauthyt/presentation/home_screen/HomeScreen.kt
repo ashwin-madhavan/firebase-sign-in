@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.FabPosition
 import androidx.compose.material.FloatingActionButton
@@ -32,6 +33,7 @@ import com.example.firebaseauthyt.presentation.DatabaseViewModel
 @Composable
 fun HomeScreen(
     viewModel: DatabaseViewModel,
+    onManageFriendClicked: () -> Unit,
     onItemClick: (Long) -> Unit,
     onAddReviewClicked: () -> Unit
 ) {
@@ -53,6 +55,9 @@ fun HomeScreen(
                     .padding(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Button(onClick = onManageFriendClicked) {
+                    Text(text = "Manage Friends")
+                }
                 LazyColumn(
                     contentPadding = PaddingValues(
                         vertical = 8.dp,
