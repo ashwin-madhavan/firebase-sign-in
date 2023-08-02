@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.firebaseauthyt.R
+import com.example.firebaseauthyt.model.User
 import com.example.firebaseauthyt.navigation.Screens
 import com.example.firebaseauthyt.ui.theme.RegularFont
 import com.example.firebaseauthyt.ui.theme.lightBlue
@@ -41,6 +42,19 @@ fun SignUpScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val testUser = User(
+            userID = "user_id_1",
+            name = "John Doe",
+            friendsList = listOf("user_id_2", "user_id_3")
+        )
+
+        Button(onClick = {
+            viewModel.addUser(testUser)
+        }) {
+            Text(text = "Register User")
+        }
+
+
         Text(
             modifier = Modifier.padding(bottom = 10.dp),
             text = "Create Account",

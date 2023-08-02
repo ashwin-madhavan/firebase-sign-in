@@ -18,10 +18,8 @@ class AuthRepositoryImpl @Inject constructor(
         return flow {
             emit(Resource.Loading())
             val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
-            Log.d("UID check", result.toString())
             emit(Resource.Success(result))
         }.catch {
-            Log.d("UID check", "Error $it")
             emit(Resource.Error(it.message.toString()))
         }
 

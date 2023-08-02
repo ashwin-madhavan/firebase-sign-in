@@ -10,8 +10,7 @@ interface MovieReviewApiService {
     @GET("movie-reviews.json?orderBy=\"userID\"")
     suspend fun getMovieReviewsByUserID(@Query("equalTo") id: String): Map<String, MovieReview>
 
-
     @POST("movie-reviews.json")
-    suspend fun addMovieReview(@Body restaurant: MovieReview): MovieReview
+    suspend fun addMovieReview(@Body movieReview: MovieReview): MovieReview
 
 }
