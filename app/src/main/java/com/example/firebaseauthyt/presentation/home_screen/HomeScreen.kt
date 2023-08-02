@@ -32,7 +32,7 @@ import com.example.firebaseauthyt.presentation.DatabaseViewModel
 @Composable
 fun HomeScreen(
     viewModel: DatabaseViewModel,
-    onItemClick: (Int) -> Unit,
+    onItemClick: (Long) -> Unit,
     onAddReviewClicked: () -> Unit
 ) {
     viewModel.getMovieReviews()
@@ -53,10 +53,6 @@ fun HomeScreen(
                     .padding(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
-                Text(text = viewModel.curUserID)
-
-
                 LazyColumn(
                     contentPadding = PaddingValues(
                         vertical = 8.dp,
@@ -73,11 +69,11 @@ fun HomeScreen(
 }
 
 @Composable
-fun MovieReviewItem(movieReview: MovieReview, onItemClick: (Int) -> Unit) {
+fun MovieReviewItem(movieReview: MovieReview, onItemClick: (Long) -> Unit) {
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .clickable { onItemClick(2) }
+            .clickable { onItemClick(movieReview.movieID) }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
