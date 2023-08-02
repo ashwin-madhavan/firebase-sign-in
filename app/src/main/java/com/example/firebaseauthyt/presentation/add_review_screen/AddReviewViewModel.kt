@@ -13,7 +13,7 @@ import okhttp3.Request
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class SearchMovieViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
+class AddReviewViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
 
     private val client = OkHttpClient()
     private var restInterface: MovieApiService

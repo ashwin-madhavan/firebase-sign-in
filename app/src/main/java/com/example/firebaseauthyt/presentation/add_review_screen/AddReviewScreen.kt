@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
@@ -55,14 +54,14 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.firebaseauthyt.model.Movie
-import com.example.firebaseauthyt.presentation.home_screen.HomeViewModel
+import com.example.firebaseauthyt.presentation.DatabaseViewModel
 
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun AddReviewScreen(homeViewModel: HomeViewModel) {
+fun AddReviewScreen(databaseViewModel: DatabaseViewModel) {
     val context = LocalContext.current
-    val viewModel: SearchMovieViewModel = viewModel()
+    val viewModel: AddReviewViewModel = viewModel()
 
     var moviesList by remember { mutableStateOf(viewModel.state.value) }
     var selectedMovie by remember { mutableStateOf<Movie?>(null) }
@@ -229,8 +228,7 @@ fun AddReviewScreen(homeViewModel: HomeViewModel) {
 
                     Button(onClick = {
                         selectedMovie?.let {
-                            homeViewModel.addMovieReview(
-                                homeViewModel.userID, it.title, review, rating
+                            databaseViewModel.addMovieReview( it.title, review, rating
                             )
                         }
 
