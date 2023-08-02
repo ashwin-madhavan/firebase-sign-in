@@ -21,7 +21,6 @@ import com.example.firebaseauthyt.presentation.signup_screen.SignUpScreen
 fun NavigationGraph(
     navController: NavHostController = rememberNavController(),
 ) {
-
     val databaseViewModel: DatabaseViewModel = viewModel()
     val movieAPIViewModel: MovieAPIViewModel = viewModel()
     NavHost(
@@ -50,7 +49,7 @@ fun NavigationGraph(
         ) { backStackEntry ->
             val arguments = requireNotNull(backStackEntry.arguments)
             val movieId = arguments.getInt("movieId")
-            MovieDetailsScreen(movieId)
+            MovieDetailsScreen(movieId.toLong(), movieAPIViewModel)
         }
         composable(route = Screens.AddReviewScreen.route) {
             AddReviewScreen(databaseViewModel, movieAPIViewModel)

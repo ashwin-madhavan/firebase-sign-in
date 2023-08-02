@@ -1,5 +1,6 @@
 package com.example.firebaseauthyt.presentation
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -15,9 +16,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MovieAPIViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
 
-    private val client = OkHttpClient()
     private var restInterface: MovieApiService
     val state = mutableStateOf(emptyList<Movie>())
+    var uiMovieState: Movie? = null
+    //mutableStateOf<MovieResponse?>(null)
 
     init {
         val accessToken =
@@ -48,7 +50,7 @@ class MovieAPIViewModel(private val stateHandle: SavedStateHandle) : ViewModel()
     fun searchMovies(query: String) {
         viewModelScope.launch {
             try {
-                val movieResponse = restInterface.getMovies(query)
+                val movieResponse = restInterface.searchForMovie(query)
                 // Handle the movieResponse here, which contains the list of movies matching the query
                 // For example, you can access the list of movies: movieResponse.results
                 state.value = movieResponse.results
@@ -56,7 +58,17 @@ class MovieAPIViewModel(private val stateHandle: SavedStateHandle) : ViewModel()
                 // Handle error cases here
             }
         }
+    }
 
-
+    fun getMovie(query: Long) {
+        viewModelScope.launch {
+            try {
+                val movieResponse = restInterface.getMovieDetails(query)
+                uiMovieState = movieResponse
+                Log.d("STATE2", uiMovieState.toString())
+            } catch (e: Exception) {
+                // TODO
+            }
+        }
     }
 }

@@ -10,4 +10,5 @@ data class Movie(
     val overview: String,
     val release_date: String,
     val title: String,
+    val poster_path: String?
 )
