@@ -32,6 +32,7 @@ import com.example.firebaseauthyt.presentation.DatabaseViewModel
 @Composable
 fun HomeScreen(
     viewModel: DatabaseViewModel,
+    onItemClick: (Int) -> Unit,
     onAddReviewClicked: () -> Unit
 ) {
     viewModel.getMovieReviews()
@@ -63,7 +64,7 @@ fun HomeScreen(
                     )
                 ) {
                     items(viewModel.movieReviewListState.value) { movieReview ->
-                        MovieReviewItem(movieReview)
+                        MovieReviewItem(movieReview, onItemClick)
                     }
                 }
             }
@@ -72,11 +73,11 @@ fun HomeScreen(
 }
 
 @Composable
-fun MovieReviewItem(movieReview: MovieReview) {
+fun MovieReviewItem(movieReview: MovieReview, onItemClick: (Int) -> Unit) {
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .clickable { }
+            .clickable { onItemClick(2) }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
