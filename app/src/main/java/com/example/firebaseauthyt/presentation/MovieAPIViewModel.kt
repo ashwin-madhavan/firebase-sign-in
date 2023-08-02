@@ -1,4 +1,4 @@
-package com.example.firebaseauthyt.presentation.add_review_screen
+package com.example.firebaseauthyt.presentation
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -13,7 +13,7 @@ import okhttp3.Request
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class AddReviewViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
+class MovieAPIViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
 
     private val client = OkHttpClient()
     private var restInterface: MovieApiService

@@ -52,18 +52,17 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.firebaseauthyt.model.Movie
 import com.example.firebaseauthyt.presentation.DatabaseViewModel
+import com.example.firebaseauthyt.presentation.MovieAPIViewModel
 
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun AddReviewScreen(databaseViewModel: DatabaseViewModel) {
+fun AddReviewScreen(databaseViewModel: DatabaseViewModel, movieAPIViewModel: MovieAPIViewModel) {
     val context = LocalContext.current
-    val viewModel: AddReviewViewModel = viewModel()
 
-    var moviesList by remember { mutableStateOf(viewModel.state.value) }
+    var moviesList by remember { mutableStateOf(movieAPIViewModel.state.value) }
     var selectedMovie by remember { mutableStateOf<Movie?>(null) }
     var titleEntered by remember {
         mutableStateOf("")
@@ -123,8 +122,8 @@ fun AddReviewScreen(databaseViewModel: DatabaseViewModel) {
                     value = titleEntered,
                     onValueChange = {
                         titleEntered = it
-                        viewModel.searchMovies(titleEntered)
-                        moviesList = viewModel.state.value
+                        movieAPIViewModel.searchMovies(titleEntered)
+                        moviesList = movieAPIViewModel.state.value
                         Log.d("Tag", "check")
                         expanded = true
                     },
