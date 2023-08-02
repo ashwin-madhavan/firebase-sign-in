@@ -29,6 +29,7 @@ import kotlinx.coroutines.launch
 fun SignUpScreen(
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
+    var userName by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     val scope = rememberCoroutineScope()
@@ -42,17 +43,6 @@ fun SignUpScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val testUser = User(
-            userID = "user_id_1",
-            name = "John Doe",
-            friendsList = listOf("user_id_2", "user_id_3")
-        )
-
-        Button(onClick = {
-            viewModel.addUser(testUser)
-        }) {
-            Text(text = "Register User")
-        }
 
 
         Text(
@@ -69,6 +59,27 @@ fun SignUpScreen(
             fontFamily = RegularFont,
 
             )
+
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = userName,
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = lightBlue,
+                cursorColor = Color.Black,
+                disabledLabelColor = lightBlue,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            ),
+            onValueChange = {
+                userName = it
+
+            },
+            shape = RoundedCornerShape(8.dp),
+            singleLine = true,
+            placeholder = {
+                Text(text = "UserName")
+            }
+        )
         TextField(
             modifier = Modifier.fillMaxWidth(),
             value = email,
@@ -113,7 +124,7 @@ fun SignUpScreen(
         Button(
             onClick = {
                 scope.launch {
-                    viewModel.registerUser(email, password)
+                    viewModel.registerUser(email, password, userName)
                 }
             },
             modifier = Modifier

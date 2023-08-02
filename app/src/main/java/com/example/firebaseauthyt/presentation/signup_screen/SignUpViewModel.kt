@@ -1,5 +1,6 @@
 package com.example.firebaseauthyt.presentation.signup_screen
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -54,11 +55,18 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    fun registerUser(email: String, password: String) = viewModelScope.launch {
+    fun registerUser(email: String, password: String, name: String) = viewModelScope.launch {
         repository.registerUser(email, password).collect { result ->
             when (result) {
                 is Resource.Success -> {
                     _signUpState.send(SignInState(isSuccess = "Sign Up Success "))
+
+                    val testUser = User(
+                        userID = firebaseAuth.uid.toString(),
+                        name = name,
+                        friendsList = listOf(firebaseAuth.uid.toString())
+                    )
+                    addUser(testUser)
                 }
 
                 is Resource.Loading -> {
