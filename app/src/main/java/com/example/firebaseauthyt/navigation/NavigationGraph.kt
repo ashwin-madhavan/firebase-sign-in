@@ -35,9 +35,9 @@ fun NavigationGraph(
             SignUpScreen()
         }
         composable(route = Screens.HomeScreen.route) {
-            HomeScreen(databaseViewModel) { navController.navigate(Screens.TestScreen.route) }
+            HomeScreen(databaseViewModel) { navController.navigate(Screens.AddReviewScreen.route) }
         }
-        composable(route = Screens.TestScreen.route) {
+        composable(route = Screens.AddReviewScreen.route) {
             AddReviewScreen(databaseViewModel, movieAPIViewModel)
         }
     }
