@@ -9,7 +9,6 @@ import com.example.firebaseauthyt.network.UserApiService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
@@ -89,20 +88,38 @@ class ManageFriendsViewModel @Inject constructor(
         })
     }
 
-    /**
-    fun addFriendToUser2(friendID: String = "test") {
-        viewModelScope.launch() {
-
-            // Get the current user's data from the database
-            val user = restInterface.getUser(curUserID)
-
-            // Add the new friend to the current friends list
-            val updatedFriendsList = user.friendsList.toMutableList()
-            updatedFriendsList.add(friendID)
-
-            // Update the friends list on the server
-            restInterface.updateFriendsList(curUserID, updatedFriendsList)
+    fun getUser() {
+        viewModelScope.launch {
+            val nameToSearch = "Jack"
+            val argument = "\"" + nameToSearch + "\""
+            try {
+                val response = restInterface.getUsersByName(id = argument)
+                Log.e("GET USERS", response.toString())
+            } catch (e: Exception) {
+                Log.e("GET USERS", "Error fetching users: ${e.message}")
+            }
         }
     }
-    **/
+
+    fun setUserAdmin() {
+
+    }
+
+
+    /**
+    fun addFriendToUser2(friendID: String = "test") {
+    viewModelScope.launch() {
+
+    // Get the current user's data from the database
+    val user = restInterface.getUser(curUserID)
+
+    // Add the new friend to the current friends list
+    val updatedFriendsList = user.friendsList.toMutableList()
+    updatedFriendsList.add(friendID)
+
+    // Update the friends list on the server
+    restInterface.updateFriendsList(curUserID, updatedFriendsList)
+    }
+    }
+     **/
 }
