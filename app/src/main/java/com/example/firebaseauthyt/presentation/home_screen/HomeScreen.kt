@@ -34,6 +34,7 @@ import com.example.firebaseauthyt.presentation.DatabaseViewModel
 fun HomeScreen(
     viewModel: DatabaseViewModel,
     onManageFriendClicked: () -> Unit,
+    onGroupChatsClicked: () -> Unit,
     onItemClick: (Long) -> Unit,
     onAddReviewClicked: () -> Unit
 ) {
@@ -57,6 +58,9 @@ fun HomeScreen(
             ) {
                 Button(onClick = onManageFriendClicked) {
                     Text(text = "Manage Friends")
+                }
+                Button(onClick = onGroupChatsClicked) {
+                    Text(text = "Group Chats")
                 }
                 LazyColumn(
                     contentPadding = PaddingValues(

@@ -101,10 +101,6 @@ class ManageFriendsViewModel @Inject constructor(
         }
     }
 
-    fun setUserAdmin() {
-
-    }
-
 
     /**
     fun addFriendToUser2(friendID: String = "test") {
