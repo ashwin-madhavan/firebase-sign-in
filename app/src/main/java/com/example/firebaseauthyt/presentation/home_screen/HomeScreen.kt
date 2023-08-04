@@ -38,7 +38,7 @@ fun HomeScreen(
     onItemClick: (Long) -> Unit,
     onAddReviewClicked: () -> Unit
 ) {
-    viewModel.getMovieReviews()
+    viewModel.getCurUserMovieReviews()
 
     Scaffold(
         floatingActionButton = {
@@ -68,7 +68,7 @@ fun HomeScreen(
                         horizontal = 8.dp
                     )
                 ) {
-                    items(viewModel.movieReviewListState.value) { movieReview ->
+                    items(viewModel.curUserMovieReviewListState.value) { movieReview ->
                         MovieReviewItem(movieReview, onItemClick)
                     }
                 }

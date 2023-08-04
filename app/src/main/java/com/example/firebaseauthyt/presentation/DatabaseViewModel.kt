@@ -13,6 +13,8 @@ import com.example.firebaseauthyt.presentation.home_screen.HomeState
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
@@ -22,7 +24,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DatabaseViewModel @Inject constructor(private val firebaseAuth: FirebaseAuth) : ViewModel() {
-    val movieReviewListState: MutableState<List<MovieReview>> =
+    val curUserMovieReviewListState: MutableState<List<MovieReview>> =
+        mutableStateOf(emptyList<MovieReview>())
+    val groupChatMovieReviewListState: MutableState<List<MovieReview>> =
         mutableStateOf(emptyList<MovieReview>())
     private var restInterface: MovieReviewApiService
 
@@ -43,11 +47,30 @@ class DatabaseViewModel @Inject constructor(private val firebaseAuth: FirebaseAu
         _uiState.value = HomeState()
     }
 
-    fun getMovieReviews() {
+    fun getCurUserMovieReviews() {
         viewModelScope.launch() {
             val movieReviews =
                 getRemoteMovieReviews(curUserID) //  Here is where the curUserID is passed in!
-            movieReviewListState.value = movieReviews.values.toList()
+            curUserMovieReviewListState.value = movieReviews.values.toList()
+        }
+    }
+
+    fun getGroupChatMovieReview(userList: List<String>) {
+        var totalList: MutableList<MovieReview> = mutableListOf()
+
+        viewModelScope.launch {
+            val deferredMovieReviews = userList.map { user ->
+                async {
+                    getRemoteMovieReviews(user)
+                }
+            }
+
+            deferredMovieReviews.awaitAll().forEach { userReviews ->
+                totalList.addAll(userReviews.values)
+            }
+
+            groupChatMovieReviewListState.value = totalList
+            Log.d("GROUP CHAT", totalList.toString())
         }
     }
 
@@ -65,15 +88,15 @@ class DatabaseViewModel @Inject constructor(private val firebaseAuth: FirebaseAu
         }
 
         viewModelScope.launch() {
-            withContext(Dispatchers.Default) { getMovieReviews() }
+            withContext(Dispatchers.Default) { getCurUserMovieReviews() }
         }
 
-        val movieReviewList = movieReviewListState.value.toList()
+        val movieReviewList = curUserMovieReviewListState.value.toList()
 
 
         viewModelScope.launch() {
             addRemoteMovieReview(movieID, title, review, rating)
-            getMovieReviews()
+            getCurUserMovieReviews()
         }
     }
 
