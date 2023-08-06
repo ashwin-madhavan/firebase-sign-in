@@ -1,13 +1,11 @@
 package com.example.firebaseauthyt.presentation.signup_screen
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.firebaseauthyt.data.AuthRepository
 import com.example.firebaseauthyt.model.User
-import com.example.firebaseauthyt.network.MovieReviewApiService
 import com.example.firebaseauthyt.network.UserApiService
 import com.example.firebaseauthyt.presentation.home_screen.HomeState
 import com.example.firebaseauthyt.presentation.login_screen.SignInState

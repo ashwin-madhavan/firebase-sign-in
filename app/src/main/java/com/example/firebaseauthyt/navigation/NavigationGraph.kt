@@ -50,7 +50,7 @@ fun NavigationGraph(
             ManageFriendsScreen()
         }
         composable(route = Screens.GroupChatsScreen.route) {
-            GroupChatsScreen(databaseViewModel) { movieId -> navController.navigate("${Screens.MovieDetailsScreen.route}/$movieId") }
+            GroupChatsScreen()
         }
         composable(
             route = "${Screens.MovieDetailsScreen.route}/{movieId}",

@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.firebaseauthyt.model.MovieReview
-import com.example.firebaseauthyt.network.MovieReviewApiService
+import com.example.firebaseauthyt.network.FilmCriticAppFirebaseApiService
 import com.example.firebaseauthyt.presentation.home_screen.HomeState
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +28,7 @@ class DatabaseViewModel @Inject constructor(private val firebaseAuth: FirebaseAu
         mutableStateOf(emptyList<MovieReview>())
     val groupChatMovieReviewListState: MutableState<List<MovieReview>> =
         mutableStateOf(emptyList<MovieReview>())
-    private var restInterface: MovieReviewApiService
+    private var restInterface: FilmCriticAppFirebaseApiService
 
     private val _uiState = MutableLiveData<HomeState>()
     val uiState: LiveData<HomeState> get() = _uiState
@@ -42,7 +42,7 @@ class DatabaseViewModel @Inject constructor(private val firebaseAuth: FirebaseAu
             )
             .build()
         restInterface = retrofit.create(
-            MovieReviewApiService::class.java
+            FilmCriticAppFirebaseApiService::class.java
         )
         _uiState.value = HomeState()
     }
