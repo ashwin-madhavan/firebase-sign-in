@@ -1,10 +1,12 @@
 package com.example.firebaseauthyt.network
 
+import com.example.firebaseauthyt.model.Group
 import com.example.firebaseauthyt.model.MovieReview
 import com.example.firebaseauthyt.model.User
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface FilmCriticAppFirebaseApiService {
@@ -19,4 +21,8 @@ interface FilmCriticAppFirebaseApiService {
         @Query("equalTo") id: String
     ): Map<String, User>
 
+    @GET("groups/{groupID}.json")
+    suspend fun getGroupByGroupID(
+        @Path("groupID") groupID: String
+    ): Group
 }
