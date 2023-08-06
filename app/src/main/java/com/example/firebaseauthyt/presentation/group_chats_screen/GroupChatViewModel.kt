@@ -23,11 +23,9 @@ class GroupChatViewModel @Inject constructor(private val firebaseAuth: FirebaseA
 
     private val _uiState = MutableLiveData<HomeState>()
     val uiState: LiveData<HomeState> get() = _uiState
-    val curUserID = firebaseAuth.uid.toString()
 
     val userLiveData: MutableLiveData<User> = MutableLiveData()
     var curUser: User? = null
-
 
     init {
         val retrofit: Retrofit = Retrofit.Builder()
@@ -36,12 +34,11 @@ class GroupChatViewModel @Inject constructor(private val firebaseAuth: FirebaseA
             .build()
         restInterface = retrofit.create(FilmCriticAppFirebaseApiService::class.java)
 
-        // Observe changes in userLiveData and update curUser
         userLiveData.observeForever { user ->
             curUser = user
         }
 
-        // Now you can call the function to fetch the user details
+        val curUserID = firebaseAuth.uid.toString()
         getUser(curUserID)
     }
 
@@ -50,8 +47,7 @@ class GroupChatViewModel @Inject constructor(private val firebaseAuth: FirebaseA
             try {
                 val remoteUserMap = getRemoteUser(userID)
                 val user = remoteUserMap.values.first()
-                Log.d("User Object", user.toString())
-                userLiveData.postValue(user) // Use postValue to update LiveData on the main thread
+                userLiveData.postValue(user)
                 _uiState.value = HomeState()
             } catch (e: Exception) {
                 Log.e("User Object", e.toString())
@@ -59,12 +55,10 @@ class GroupChatViewModel @Inject constructor(private val firebaseAuth: FirebaseA
         }
     }
 
-
     private suspend fun getRemoteUser(userID: String): Map<String, User> {
         return withContext(Dispatchers.IO) {
             val argument = "\"$userID\""
             restInterface.getUsersByUserID(id = argument)
-
         }
     }
 }

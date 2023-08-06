@@ -87,4 +87,6 @@ dependencies {
     implementation("io.coil-kt:coil:1.4.0")
     implementation "com.google.accompanist:accompanist-coil:0.15.0"
 
+    implementation "androidx.compose.runtime:runtime-livedata:1.0.1"
+
 }
