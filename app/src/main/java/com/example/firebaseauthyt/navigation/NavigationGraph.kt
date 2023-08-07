@@ -61,7 +61,7 @@ fun NavigationGraph(
         ) { backStackEntry ->
             val arguments = requireNotNull(backStackEntry.arguments)
             val groupId = arguments.getInt("groupId")
-            GroupChatDetailsScreen(groupId.toLong())
+            GroupChatDetailsScreen(groupId.toLong()) { movieId -> navController.navigate("${Screens.MovieDetailsScreen.route}/$movieId") }
         }
         composable(
             route = "${Screens.MovieDetailsScreen.route}/{movieId}",
