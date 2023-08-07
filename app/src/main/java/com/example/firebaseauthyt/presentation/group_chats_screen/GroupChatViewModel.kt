@@ -38,7 +38,7 @@ class GroupChatViewModel @Inject constructor(private val firebaseAuth: FirebaseA
 
         userLiveData.observeForever { user ->
             curUser = user
-            curUser?.let { getGroup(it) }
+            curUser?.let { getGroups(it) }
         }
 
         val curUserID = firebaseAuth.uid.toString()
@@ -66,7 +66,7 @@ class GroupChatViewModel @Inject constructor(private val firebaseAuth: FirebaseA
         }
     }
 
-    private fun getGroup(user: User) {
+    private fun getGroups(user: User) {
         val groupIDList: List<String> = user.groupsList
         val fetchedGroups = mutableListOf<Group>()
 
@@ -87,7 +87,7 @@ class GroupChatViewModel @Inject constructor(private val firebaseAuth: FirebaseA
 
     private suspend fun getRemoteGroup(groupID: String): Group {
         return withContext(Dispatchers.IO) {
-            restInterface.getGroupByGroupID(groupID)
+            restInterface.getGroupByFirebaseGeneratedGroupID(groupID)
         }
     }
 }

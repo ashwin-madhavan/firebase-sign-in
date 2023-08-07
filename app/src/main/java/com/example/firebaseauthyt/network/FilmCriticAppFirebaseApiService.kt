@@ -22,7 +22,11 @@ interface FilmCriticAppFirebaseApiService {
     ): Map<String, User>
 
     @GET("groups/{groupID}.json")
-    suspend fun getGroupByGroupID(
+    suspend fun getGroupByFirebaseGeneratedGroupID(
         @Path("groupID") groupID: String
     ): Group
+
+    @GET("groups.json?orderBy=\"groupID\"")
+    suspend fun getGroupByGroupID(@Query("equalTo") id: Long): Map<String, Group>
+
 }
