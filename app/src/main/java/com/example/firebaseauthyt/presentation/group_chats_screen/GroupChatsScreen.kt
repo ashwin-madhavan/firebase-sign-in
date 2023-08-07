@@ -21,7 +21,8 @@ import com.example.firebaseauthyt.model.User
 import com.example.firebaseauthyt.presentation.home_screen.MovieReviewItem
 
 @Composable
-fun GroupChatsScreen(viewModel: GroupChatViewModel = hiltViewModel()) {
+fun GroupChatsScreen(onItemClick: (Long) -> Unit) {
+    val viewModel: GroupChatViewModel = hiltViewModel()
     val thisCurUser by viewModel.userLiveData.observeAsState()
     val thisCurUserGroups by viewModel.groupLiveData.observeAsState()
 
@@ -34,27 +35,26 @@ fun GroupChatsScreen(viewModel: GroupChatViewModel = hiltViewModel()) {
             )
         ) {
             items(thisCurUserGroups ?: emptyList()) { item ->
-                GroupCard(group = item)
+                GroupCard(group = item, onItemClick)
             }
         }
     }
 }
 
 @Composable
-fun GroupCard(group: Group) {
+fun GroupCard(group: Group, onItemClick: (Long) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable { /* Handle click here */ },
+            .clickable { onItemClick(group.groupID) },
         elevation = 4.dp
     ) {
         Column(
             modifier = Modifier
                 .padding(16.dp)
         ) {
-            Text(text = group.name) // Display the group using its toString() representation
-            // You can add more information from the group object as needed
+            Text(text = group.name)
         }
     }
 }

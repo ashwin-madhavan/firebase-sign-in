@@ -11,6 +11,7 @@ import androidx.navigation.navArgument
 import com.example.firebaseauthyt.presentation.DatabaseViewModel
 import com.example.firebaseauthyt.presentation.add_review_screen.AddReviewScreen
 import com.example.firebaseauthyt.presentation.MovieAPIViewModel
+import com.example.firebaseauthyt.presentation.group_chats_screen.GroupChatDetailsScreen
 import com.example.firebaseauthyt.presentation.group_chats_screen.GroupChatsScreen
 import com.example.firebaseauthyt.presentation.home_screen.HomeScreen
 import com.example.firebaseauthyt.presentation.login_screen.SignInScreen
@@ -50,7 +51,17 @@ fun NavigationGraph(
             ManageFriendsScreen()
         }
         composable(route = Screens.GroupChatsScreen.route) {
-            GroupChatsScreen()
+            GroupChatsScreen { groupId ->
+                navController.navigate("${Screens.GroupChatDetailsScreen.route}/$groupId")
+            }
+        }
+        composable(
+            route = "${Screens.GroupChatDetailsScreen.route}/{groupId}",
+            arguments = listOf(navArgument("groupId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val arguments = requireNotNull(backStackEntry.arguments)
+            val groupId = arguments.getInt("groupId")
+            GroupChatDetailsScreen(groupId.toLong())
         }
         composable(
             route = "${Screens.MovieDetailsScreen.route}/{movieId}",
