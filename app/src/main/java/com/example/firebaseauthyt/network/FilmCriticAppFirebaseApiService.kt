@@ -1,13 +1,16 @@
 package com.example.firebaseauthyt.network
 
 import com.example.firebaseauthyt.model.Group
+import com.example.firebaseauthyt.model.GroupIDCountResponse
 import com.example.firebaseauthyt.model.MovieReview
 import com.example.firebaseauthyt.model.User
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.Response
 
 interface FilmCriticAppFirebaseApiService {
     @GET("movie-reviews.json?orderBy=\"userID\"")
@@ -31,4 +34,10 @@ interface FilmCriticAppFirebaseApiService {
 
     @POST("groups.json")
     suspend fun addGroup(@Body group: Group): Group
+
+    @GET("GroupIDCount.json")
+    suspend fun getGroupIDCount(): Int
+
+    @PATCH("GroupIDCount.json")
+    suspend fun updateGroupIDCount(@Body update: Map<String, Int>): Response<Void>
 }

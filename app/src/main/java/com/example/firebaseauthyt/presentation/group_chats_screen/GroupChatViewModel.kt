@@ -29,6 +29,8 @@ class GroupChatViewModel @Inject constructor(private val firebaseAuth: FirebaseA
     val userLiveData: MutableLiveData<User> = MutableLiveData()
     val groupLiveData: MutableLiveData<List<Group>> = MutableLiveData()
     var curUser: User? = null
+    private var groupIDCount: Int = 0
+
 
     init {
         val retrofit: Retrofit = Retrofit.Builder()
@@ -44,7 +46,7 @@ class GroupChatViewModel @Inject constructor(private val firebaseAuth: FirebaseA
 
         val curUserID = firebaseAuth.uid.toString()
         getUser(curUserID)
-
+        fetchGroupIDCount()
     }
 
     private fun getUser(userID: String) {
@@ -91,33 +93,69 @@ class GroupChatViewModel @Inject constructor(private val firebaseAuth: FirebaseA
         return response.values.first()
     }
 
+    /**
     fun addNewGroup(
-        groupID: Long,
-        name: String,
-        owner: String,
-        members: List<String>
+    groupID: Long,
+    name: String,
+    owner: String,
+    members: List<String>
     ) {
-        viewModelScope.launch() {
-            withContext(Dispatchers.Default) { curUser?.let { getGroups(it) } }
-        }
+    viewModelScope.launch() {
+    withContext(Dispatchers.Default) { curUser?.let { getGroups(it) } }
+    }
 
-        viewModelScope.launch() {
-            addRemoteNewGroup(groupID, name, owner, members)
-            curUser?.let { getGroups(it) }
+    viewModelScope.launch() {
+    addRemoteNewGroup(groupID.toLong(), name, owner, members)
+    curUser?.let { getGroups(it) }
+    }
+    }
+     **/
+    fun addNewGroup(name: String, owner: String, members: List<String>) {
+        viewModelScope.launch {
+            try {
+                addRemoteNewGroup(name, owner, members)
+            } catch (e: Exception) {
+                Log.e("ADD GROUP", "Error adding new group: ${e.message}")
+            }
         }
     }
 
     private suspend fun addRemoteNewGroup(
-        groupID: Long,
         name: String,
         owner: String,
         members: List<String>
     ) {
         return withContext(Dispatchers.IO) {
             val group = Group(
-                5, name, owner, members
+                groupIDCount.toLong(), name, owner, members
             )
             restInterface.addGroup(group)
+
+            // Increment groupIDCount locally
+            groupIDCount++
+
+            // Update the GroupIDCount in the database
+            updateGroupIDCountInDatabase()
+        }
+    }
+
+
+    private suspend fun updateGroupIDCountInDatabase() {
+        try {
+            val updateValue = mapOf("GroupIDCount" to groupIDCount)
+            restInterface.updateGroupIDCount(updateValue)
+        } catch (e: Exception) {
+            Log.e("GROUP COUNT", "Error updating group count in the database: ${e.message}")
+        }
+    }
+
+    private fun fetchGroupIDCount() {
+        viewModelScope.launch {
+            try {
+                groupIDCount = restInterface.getGroupIDCount()
+            } catch (e: Exception) {
+                Log.e("GROUP COUNT", "Error fetching group count: ${e.message}")
+            }
         }
     }
 }
