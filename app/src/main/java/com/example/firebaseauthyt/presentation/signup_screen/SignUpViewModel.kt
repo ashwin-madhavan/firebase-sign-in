@@ -64,7 +64,7 @@ class SignUpViewModel @Inject constructor(
                         name = name,
                         friendsList = listOf(firebaseAuth.uid.toString())
                         ,
-                        groupsList = listOf("-Nb2-ZyaVRkGknGv7u4b")
+                        groupsList = listOf(1)
                     )
                     addUser(testUser)
                 }

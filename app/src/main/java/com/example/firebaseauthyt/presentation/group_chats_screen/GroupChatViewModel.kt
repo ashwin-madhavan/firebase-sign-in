@@ -67,13 +67,13 @@ class GroupChatViewModel @Inject constructor(private val firebaseAuth: FirebaseA
     }
 
     private fun getGroups(user: User) {
-        val groupIDList: List<String> = user.groupsList
+        val groupIDList: List<Long> = user.groupsList
         val fetchedGroups = mutableListOf<Group>()
 
         viewModelScope.launch {
             try {
                 groupIDList.forEach { groupID ->
-                    val group = getRemoteGroup(groupID)
+                    val group = getGroupByGroupID(groupID)
                     fetchedGroups.add(group)
                 }
 
@@ -85,10 +85,10 @@ class GroupChatViewModel @Inject constructor(private val firebaseAuth: FirebaseA
     }
 
 
-    private suspend fun getRemoteGroup(groupID: String): Group {
-        return withContext(Dispatchers.IO) {
-            restInterface.getGroupByFirebaseGeneratedGroupID(groupID)
-        }
+    private suspend fun getGroupByGroupID(groupID: Long): Group {
+        val response =
+            restInterface.getGroupByGroupID(groupID)
+        return response.values.first()
     }
 }
 

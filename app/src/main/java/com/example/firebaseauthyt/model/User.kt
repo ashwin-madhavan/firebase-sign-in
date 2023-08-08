@@ -5,6 +5,6 @@ data class User(
     val userID: String,
     val name: String,
     val friendsList: List<String>,
-    val groupsList: List<String>
+    val groupsList: List<Long>
 
 )
