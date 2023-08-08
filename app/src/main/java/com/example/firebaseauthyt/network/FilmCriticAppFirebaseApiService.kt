@@ -29,4 +29,6 @@ interface FilmCriticAppFirebaseApiService {
     @GET("groups.json?orderBy=\"groupID\"")
     suspend fun getGroupByGroupID(@Query("equalTo") id: Long): Map<String, Group>
 
+    @POST("groups.json")
+    suspend fun addGroup(@Body group: Group): Group
 }

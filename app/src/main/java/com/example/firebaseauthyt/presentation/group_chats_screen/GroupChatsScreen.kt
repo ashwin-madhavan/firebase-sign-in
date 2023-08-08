@@ -56,6 +56,7 @@ fun GroupChatsScreen(onItemClick: (Long) -> Unit) {
             confirmButton = {
                 Button(
                     onClick = {
+                        viewModel.addNewGroup(6, "test", "test", listOf("john"))
                         showDialog = false
                     }
                 ) {

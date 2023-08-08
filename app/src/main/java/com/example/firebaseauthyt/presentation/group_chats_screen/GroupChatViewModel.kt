@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.firebaseauthyt.model.Group
+import com.example.firebaseauthyt.model.MovieReview
 import com.example.firebaseauthyt.model.User
 import com.example.firebaseauthyt.network.FilmCriticAppFirebaseApiService
 import com.example.firebaseauthyt.presentation.home_screen.HomeState
@@ -73,7 +74,7 @@ class GroupChatViewModel @Inject constructor(private val firebaseAuth: FirebaseA
         viewModelScope.launch {
             try {
                 groupIDList.forEach { groupID ->
-                    val group = getGroupByGroupID(groupID)
+                    val group = getRemoteGroups(groupID)
                     fetchedGroups.add(group)
                 }
 
@@ -84,11 +85,40 @@ class GroupChatViewModel @Inject constructor(private val firebaseAuth: FirebaseA
         }
     }
 
-
-    private suspend fun getGroupByGroupID(groupID: Long): Group {
+    private suspend fun getRemoteGroups(groupID: Long): Group {
         val response =
             restInterface.getGroupByGroupID(groupID)
         return response.values.first()
+    }
+
+    fun addNewGroup(
+        groupID: Long,
+        name: String,
+        owner: String,
+        members: List<String>
+    ) {
+        viewModelScope.launch() {
+            withContext(Dispatchers.Default) { curUser?.let { getGroups(it) } }
+        }
+
+        viewModelScope.launch() {
+            addRemoteNewGroup(groupID, name, owner, members)
+            curUser?.let { getGroups(it) }
+        }
+    }
+
+    private suspend fun addRemoteNewGroup(
+        groupID: Long,
+        name: String,
+        owner: String,
+        members: List<String>
+    ) {
+        return withContext(Dispatchers.IO) {
+            val group = Group(
+                5, name, owner, members
+            )
+            restInterface.addGroup(group)
+        }
     }
 }
 
